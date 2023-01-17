@@ -1,0 +1,38 @@
+{
+  "name": "node.js-furfifarm-backend",
+  "version": "1.0.0",
+  "description": "FURFI Farm",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node.js",
+    "express",
+    "furiofinance"
+  ],
+  "author": "furio",
+  "license": "ISC",
+  "dependencies": {
+    "@ethersproject/providers": "^5.5.3",
+    "axios": "^1.2.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.1",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "ethers": "^5.4.0",
+    "express": "^4.17.1",
+    "fetch": "^1.1.0",
+    "from-exponential": "^1.1.1",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.13",
+    "mongoose-double": "0.0.1",
+    "mongoose-int32": "^0.6.0",
+    "node-fetch": "^2.6.6",
+    "nodemon": "^2.0.15",
+    "truffle-contract": "^4.0.31",
+    "web3": "^1.7.1"
+  }
+}
