@@ -1,6 +1,8 @@
 
 const express = require("express");
-const http = require("http");
+const http = require("https");
+const request = require('request');
+const fs = require("fs");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const apyController = require("./app/controllers/prices");
@@ -25,7 +27,13 @@ setInterval(() => {
 }, 10000);
 
 
-const server = http.createServer(app);
+const server = http.createServer(
+  {
+    key: fs.readFileSync("key.pem"),
+    cert: fs.readFileSync("cert.pem"),
+  },
+  app
+);
 
 const PORT = process.env.PORT || 5000;
 
