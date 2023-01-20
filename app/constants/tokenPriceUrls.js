@@ -26,10 +26,12 @@ const tokenPriceUrls = {
     WBTC: {
         APIID: "bitcoin",
         URL: "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+        // URL: "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1",
     },
     WETH: {
         APIID: "weth",
         URL: "https://api.coingecko.com/api/v3/simple/price?ids=weth&vs_currencies=usd",
+        // URL: "https://api.coingecko.com/api/v3/coins/weth/market_chart?vs_currency=usd&days=1",
     },
     APT: {
         APIID: "aptos",

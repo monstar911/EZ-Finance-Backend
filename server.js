@@ -5,7 +5,9 @@ const request = require('request');
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const apyController = require("./app/controllers/prices");
+// const apyController = require("./app/controllers/prices");
+const apyController = require("./app/controllers/markets");
+
 var corsOptions = {
   origin: "*"
 };
@@ -20,7 +22,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.get('/api/prices', apyController.getPrices);
+// app.get('/api/prices', apyController.getPrices);
+app.get('/api/prices', apyController.getHistoricalMarketData);
 
 setInterval(() => {
   apyController.calculateAndSave();
