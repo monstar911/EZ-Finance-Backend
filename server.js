@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 // const apyController = require("./app/controllers/prices");
 const apyController = require("./app/controllers/markets");
+const dexController = require("./app/controllers/dexes");
 
 var corsOptions = {
   origin: "*"
@@ -24,10 +25,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // app.get('/api/prices', apyController.getPrices);
 app.get('/api/prices', apyController.getHistoricalMarketData);
+app.get('/api/dexes', dexController.getHistoricalDexData);
 
 setInterval(() => {
   apyController.calculateAndSave();
-}, 10000);
+}, 30000);
+
+setInterval(() => {
+  dexController.scrapeAndSave();
+}, 60000);
 
 
 const server = http.createServer(

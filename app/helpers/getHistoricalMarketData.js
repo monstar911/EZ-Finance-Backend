@@ -19,8 +19,8 @@ exports.historicalData = async () => {
         const url = getMarketsUrl();
         const res = await fetch(url);
         const data = await res.json();
-        console.log("url", url);
-        console.log("data", data);
+        // console.log("url", url);
+        // console.log("data", data);
 
         for (let i = 0; i < data.length; i++) {
             Object.keys(data[i]).map((key) => {
@@ -53,21 +53,11 @@ exports.historicalData = async () => {
 
         console.log("prices", prices);
 
-
-
-        // const tokenData = tokenPairInfo.data as { balance_x: { value: number }; balance_y: { value: number } }
-        // console.log('getTVLInfo tokenData.balance_x', tokenData.balance_x.value);
-        // setPairTVLInfo((pairTVLInfo) => ({
-        //     ...pairTVLInfo,
-        //     [symbol]: (tokenPrice3['apt'] * tokenData.balance_x.value / Math.pow(10, 8) +
-        //         tokenPrice3[symbol] * tokenData.balance_y.value / Math.pow(10, 8))
-
-
-        prices[tokenName] = data[apiId].usd;
-        return prices[tokenName];
+        return prices;
     } catch (err) {
-        // console.log(err);
-        // return prices[tokenName];
+        console.log(err);
+
+        return prices;
     }
 };
 
