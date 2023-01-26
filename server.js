@@ -33,7 +33,7 @@ setInterval(() => {
 
 setInterval(() => {
   dexController.scrapeAndSave();
-}, 60000);
+}, 600000);
 
 
 const server = http.createServer(

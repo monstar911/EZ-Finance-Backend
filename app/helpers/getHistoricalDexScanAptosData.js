@@ -18,7 +18,7 @@ const coins = {
     weth: { name: 'WETH', symbol: 'weth', logo: 0 },
     usdt: { name: 'USDT', symbol: 'usdt', logo: 0 },
     usdc: { name: 'USDC', symbol: 'usdc', logo: 0 },
-    cake: { name: 'CAKE', symbol: 'cake', logo: 0 },
+    cake: { name: 'Cake', symbol: 'cake', logo: 0 },
     sol: { name: 'SOL', symbol: 'sol', logo: 0 },
     bnb: { name: 'BNB', symbol: 'bnb', logo: 0 },
 }
@@ -110,6 +110,31 @@ const pairs = {
     }
 }
 
+let datas24H_temp = {
+    pancake: {
+        'apt-usdc': { vol: 0, liquidity: 0 },
+        'weth-usdc': { vol: 0, liquidity: 0 },
+        'cake-apt': { vol: 0, liquidity: 0 },
+        'bnb-usdc': { vol: 0, liquidity: 0 },
+        'usdc-usdt': { vol: 0, liquidity: 0 },
+    },
+
+    liquid: {
+        'apt-usdc': { vol: 0, liquidity: 0 },
+        'weth-usdc': { vol: 0, liquidity: 0 },
+        'weth-apt': { vol: 0, liquidity: 0 },
+        'wbtc-apt': { vol: 0, liquidity: 0 },
+    },
+
+    aux: {
+        'apt-usdc': { vol: 0, liquidity: 0 },
+        'sol-usdc': { vol: 0, liquidity: 0 },
+        'weth-usdc': { vol: 0, liquidity: 0 },
+        'wbtc-apt': { vol: 0, liquidity: 0 },
+        'usdc-usdt': { vol: 0, liquidity: 0 },
+    }
+}
+
 let datas24H = {
     pancake: {
         'apt-usdc': { vol: 0, liquidity: 0 },
@@ -134,14 +159,21 @@ let datas24H = {
         'usdc-usdt': { vol: 0, liquidity: 0 },
     }
 }
-let dexes = [];
+
 
 exports.historicalData = async () => {
     let hasNextPage = true;
     let first = true;
     let offset = 1;
 
-    dexes = [];
+    // clearTempData() = () => {
+    Object.keys(pairs).forEach((dex) => {
+        for (let pair in pairs[dex]) {
+            datas24H_temp[dex][pair]['vol'] = 0;
+            datas24H_temp[dex][pair]['liquidity'] = 0;
+        }
+    })
+    // };
 
     while (hasNextPage) {
         try {
@@ -167,6 +199,11 @@ exports.historicalData = async () => {
             const dexerVolume24h = data.dexerVolume24h;
             const usdVolume24h = data.usdVolume24h;
             const pageList = data.pageList;
+            console.log("pageList", pageList.length);
+            if (pageList.length === 0 || offset > 300) {
+                console.log("offset", offset);
+                break;
+            }
 
             console.log("total", total);
             analizePage(pageList);
@@ -180,39 +217,86 @@ exports.historicalData = async () => {
         console.log(hasNextPage);
     }
 
+    // set24HData() = () => {
+    Object.keys(pairs).forEach((dex) => {
+        for (let pair in pairs[dex]) {
+            if (datas24H_temp[dex][pair]['vol'] !== undefined) {
+                datas24H[dex][pair]['vol'] = datas24H_temp[dex][pair]['vol'];
+            }
+
+            if (datas24H_temp[dex][pair]['liquidity'] !== undefined) {
+                datas24H[dex][pair]['liquidity'] = datas24H_temp[dex][pair]['liquidity'];
+            }
+        }
+    })
+    // };
+
+    console.log('datas24H', datas24H);
+
     return datas24H;
 };
+
+// const analizePage = (pageList) => {
+//     // console.log('analizePage', pageList.length);
+
+//     Object.keys(pairs).forEach((dex) => {
+//         for (let pair in pairs[dex]) {
+//             if (datas24H[dex][pair]['vol'] !== 0 && datas24H[dex][pair]['liquidity'] !== 0) {
+//                 continue;
+//             }
+
+//             for (let i = 0; i < pageList.length; i++) {
+//                 // console.log(pairs[dex][pair].x.name, pageList[i]['dexerName'], pageList[i]['baseTokenSymbol'], pageList[i]['quotoTokenSymbol'], pageList[i]['volumeUsd24h'], pageList[i]['liquidity']);
+
+//                 if (pageList[i]['baseTokenSymbol'].indexOf(pairs[dex][pair].x.name) === 0 && pageList[i]['quotoTokenSymbol'].indexOf(pairs[dex][pair].y.name) === 0) {
+//                     if (pageList[i]['dexerName'].indexOf('PancakeSwap') === 0) {
+//                         datas24H[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
+//                         datas24H[dex][pair]['liquidity'] = pageList[i]['liquidity'];
+//                         break;
+//                     } else if (pageList[i]['dexerName'].indexOf('Liquidswap') === 0) {
+//                         datas24H[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
+//                         datas24H[dex][pair]['liquidity'] = pageList[i]['liquidity'];
+//                     } else if (pageList[i]['dexerName'].indexOf('AUX Exchange') === 0) {
+//                         datas24H[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
+//                         datas24H[dex][pair]['liquidity'] = pageList[i]['liquidity'];
+//                     }
+//                 }
+//             }
+//         }
+//     })
+
+//     console.log("datas24H", datas24H);
+// };
 
 const analizePage = (pageList) => {
     // console.log('analizePage', pageList.length);
 
-    Object.keys(pairs).forEach((dex) => {
+    let dex;
+    for (let i = 0; i < pageList.length; i++) {
+        if (pageList[i]['dexerName'].indexOf('PancakeSwap') === 0) {
+            dex = 'pancake';
+        } else if (pageList[i]['dexerName'].indexOf('Liquidswap') === 0) {
+            dex = 'liquid';
+        } else if (pageList[i]['dexerName'].indexOf('AUX Exchange') === 0) {
+            dex = 'aux';
+        }
+
+        // console.log('analizePage', pageList.length, i, dex);
+        // console.log(pairs[dex][pair].x.name, pageList[i]['dexerName'], pageList[i]['baseTokenSymbol'], pageList[i]['quotoTokenSymbol'], pageList[i]['volumeUsd24h'], pageList[i]['liquidity']);
+
         for (let pair in pairs[dex]) {
-            if (datas24H[dex][pair]['vol'] !== 0 && datas24H[dex][pair]['liquidity'] !== 0) {
+            if (datas24H_temp[dex][pair]['vol'] !== 0 && datas24H_temp[dex][pair]['liquidity'] !== 0) {
                 continue;
             }
 
-            for (let i = 0; i < pageList.length; i++) {
-                // console.log(pairs[dex][pair].x.name, pageList[i]['dexerName'], pageList[i]['baseTokenSymbol'], pageList[i]['quotoTokenSymbol'], pageList[i]['volumeUsd24h'], pageList[i]['liquidity']);
-
-                if (pageList[i]['baseTokenSymbol'].indexOf(pairs[dex][pair].x.name) === 0 && pageList[i]['quotoTokenSymbol'].indexOf(pairs[dex][pair].y.name) === 0) {
-                    if (pageList[i]['dexerName'].indexOf('PancakeSwap') === 0) {
-                        datas24H[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
-                        datas24H[dex][pair]['liquidity'] = pageList[i]['liquidity'];
-                        break;
-                    } else if (pageList[i]['dexerName'].indexOf('Liquidswap') === 0) {
-                        datas24H[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
-                        datas24H[dex][pair]['liquidity'] = pageList[i]['liquidity'];
-                    } else if (pageList[i]['dexerName'].indexOf('AUX Exchange') === 0) {
-                        datas24H[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
-                        datas24H[dex][pair]['liquidity'] = pageList[i]['liquidity'];
-                    }
-                }
+            if (pageList[i]['baseTokenSymbol'].indexOf(pairs[dex][pair].x.name) === 0 && pageList[i]['quotoTokenSymbol'].indexOf(pairs[dex][pair].y.name) === 0) {
+                datas24H_temp[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
+                datas24H_temp[dex][pair]['liquidity'] = pageList[i]['liquidity'];
             }
         }
-    })
+    }
 
-    console.log("datas24H", datas24H);
+    console.log("datas24H_temp", datas24H_temp);
 };
 
 async function sleep(millis) {
