@@ -41,6 +41,9 @@ exports.historicalData = async () => {
                         case 'usdc':
                             prices['usdc'] = data[i]['current_price'];
                             break;
+                        case 'cake':
+                            prices['cake'] = data[i]['current_price'];
+                            break;
                         case 'dai':
                             prices['dai'] = data[i]['current_price'];
                             break;

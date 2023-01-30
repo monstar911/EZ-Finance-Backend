@@ -189,6 +189,10 @@ exports.historicalData = async () => {
 
             const status = resp.status;
             const data = resp.data;
+            if (data === undefined || data === null) {
+                console.log('data === undefined || data === null');
+                break;
+            }
 
             hasNextPage = data.hasNextPage;
 
@@ -235,38 +239,6 @@ exports.historicalData = async () => {
 
     return datas24H;
 };
-
-// const analizePage = (pageList) => {
-//     // console.log('analizePage', pageList.length);
-
-//     Object.keys(pairs).forEach((dex) => {
-//         for (let pair in pairs[dex]) {
-//             if (datas24H[dex][pair]['vol'] !== 0 && datas24H[dex][pair]['liquidity'] !== 0) {
-//                 continue;
-//             }
-
-//             for (let i = 0; i < pageList.length; i++) {
-//                 // console.log(pairs[dex][pair].x.name, pageList[i]['dexerName'], pageList[i]['baseTokenSymbol'], pageList[i]['quotoTokenSymbol'], pageList[i]['volumeUsd24h'], pageList[i]['liquidity']);
-
-//                 if (pageList[i]['baseTokenSymbol'].indexOf(pairs[dex][pair].x.name) === 0 && pageList[i]['quotoTokenSymbol'].indexOf(pairs[dex][pair].y.name) === 0) {
-//                     if (pageList[i]['dexerName'].indexOf('PancakeSwap') === 0) {
-//                         datas24H[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
-//                         datas24H[dex][pair]['liquidity'] = pageList[i]['liquidity'];
-//                         break;
-//                     } else if (pageList[i]['dexerName'].indexOf('Liquidswap') === 0) {
-//                         datas24H[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
-//                         datas24H[dex][pair]['liquidity'] = pageList[i]['liquidity'];
-//                     } else if (pageList[i]['dexerName'].indexOf('AUX Exchange') === 0) {
-//                         datas24H[dex][pair]['vol'] = pageList[i]['volumeUsd24h'];
-//                         datas24H[dex][pair]['liquidity'] = pageList[i]['liquidity'];
-//                     }
-//                 }
-//             }
-//         }
-//     })
-
-//     console.log("datas24H", datas24H);
-// };
 
 const analizePage = (pageList) => {
     // console.log('analizePage', pageList.length);

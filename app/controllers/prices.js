@@ -22,6 +22,7 @@ exports.calculateAndSave = async () => {
     var usdtPrice = await tokenPrices.fetchTokenPrices("USDT");
     var wbtcPrice = await tokenPrices.fetchTokenPrices("WBTC");
     var wethPrice = await tokenPrices.fetchTokenPrices("WETH");
+    var cakePrice = await tokenPrices.fetchTokenPrices("CAKE");
     var aptPrice = await tokenPrices.fetchTokenPrices("APT");
 
     prices = {
@@ -32,6 +33,7 @@ exports.calculateAndSave = async () => {
       weth: wethPrice,
       usdt: usdtPrice,
       usdc: usdcPrice,
+      cake: cakePrice,
       dai: daiPrice,
     };
 
