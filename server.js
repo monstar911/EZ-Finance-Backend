@@ -1,6 +1,7 @@
 
 const express = require("express");
-const http = require("https");
+// const https = require("https");
+const http = require("http");
 const request = require('request');
 const fs = require("fs");
 const bodyParser = require("body-parser");
@@ -35,12 +36,15 @@ setInterval(() => {
   dexController.scrapeAndSave();
 }, 600000);
 
+// const server = https.createServer(
+//   {
+//     key: fs.readFileSync("key.pem"),
+//     cert: fs.readFileSync("cert.pem"),
+//   },
+//   app
+// );
 
 const server = http.createServer(
-  {
-    key: fs.readFileSync("key.pem"),
-    cert: fs.readFileSync("cert.pem"),
-  },
   app
 );
 
